@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Windows 95 Style Slow Fade & Redirect</title>
+<title>Windows 95 Style Fullscreen Fade</title>
 <style>
-  body {
+  html, body {
     margin: 0;
+    height: 100%;
     background: black;
     font-family: 'MS Sans Serif', Tahoma, Geneva, sans-serif;
+    overflow: hidden;
+  }
+  body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
   }
   img {
-    position: relative;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
     opacity: 0;
-    max-width: 100vw;
-    max-height: 100vh;
     image-rendering: pixelated;
+    transition: none; /* no CSS transition, JS handles fade */
   }
 </style>
 </head>
@@ -27,27 +32,14 @@
   <img src="logo.png" alt="Logo" id="logo" />
 <script>
   const img = document.getElementById('logo');
-  let scale = 3;
-  let opacity = 0;
-
-  // How many frames approx for 30 seconds at 60fps
-  const totalFrames = 30 * 60;
+  const durationSeconds = 30;
+  const totalFrames = durationSeconds * 60; // approx 60fps
   let frame = 0;
 
   function animate() {
     if (frame <= totalFrames) {
-      // Calculate progress from 0 to 1
       const progress = frame / totalFrames;
-
-      // Scale from 3 to 1 linearly
-      scale = 3 - 2 * progress;
-
-      // Opacity from 0 to 1 linearly
-      opacity = progress;
-
-      img.style.transform = `scale(${scale.toFixed(3)})`;
-      img.style.opacity = opacity.toFixed(3);
-
+      img.style.opacity = progress.toFixed(3);
       frame++;
       requestAnimationFrame(animate);
     } else {
