@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Windows 95 Style Fullscreen Fade</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: black;
+    font-family: 'MS Sans Serif', Tahoma, Geneva, sans-serif;
+    overflow: hidden;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  img {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    opacity: 0;
+    image-rendering: pixelated;
+    transition: none; /* no CSS transition, JS handles fade */
+  }
+  #coords {
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    background: black;
+    color: lime;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    padding: 4px 8px;
+    border: 2px solid #00ff00;
+    border-radius: 4px;
+    user-select: none;
+    display: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+  <img src="logo.png" alt="Logo" id="logo" />
+  <div id="coords">X: 0, Y: 0</div>
+
+<script>
+  const img = document.getElementById('logo');
+  const coordsBox = document.getElementById('coords');
+  const durationSeconds = 30;
+  const totalFrames = durationSeconds * 60; // approx 60fps
+  let frame = 0;
+
+  // Animation fade-in
+  function animate() {
+    if (frame <= totalFrames) {
+      const progress = frame / totalFrames;
+      img.style.opacity = progress.toFixed(3);
+      frame++;
+      requestAnimationFrame(animate);
+    } else {
+      setTimeout(() => {
+        window.location.href = 'true.html';
+      }, 800);
+    }
+  }
+
+  img.onload = () => {
+    animate();
+  };
+
+  // Ctrl+Shift mouse coords logic
+  let ctrlPressed = false;
+  let shiftPressed = false;
+  let mouseX = 0;
+  let mouseY = 0;
+  let copied = false;
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      copied = true;
+      coordsBox.textContent = `Copied: ${text}`;
+      setTimeout(() => {
+        copied = false;
+      }, 1500);
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Control') ctrlPressed = true;
+    if (e.key === 'Shift') shiftPressed = true;
+
+    if (ctrlPressed) {
+      coordsBox.style.display = 'block';
+      if (!copied) {
+        coordsBox.textContent = `X: ${mouseX}, Y: ${mouseY}`;
+      }
+
+      if (shiftPressed && !copied) {
+        copyToClipboard(`${mouseX},${mouseY}`);
+      }
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'Control') {
+      ctrlPressed = false;
+      coordsBox.style.display = 'none';
+      copied = false;
+    }
+    if (e.key === 'Shift') shiftPressed = false;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (ctrlPressed && !copied) {
+      coordsBox.textContent = `X: ${mouseX}, Y: ${mouseY}`;
+    }
+  });
+</script>
+</body>
+</html>
