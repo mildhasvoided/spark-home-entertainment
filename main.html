@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Windows 95 Style Fade & Redirect</title>
+<title>Windows 95 Style Slow Fade & Redirect</title>
 <style>
   body {
     margin: 0;
-    background: black; /* black background */
+    background: black;
     font-family: 'MS Sans Serif', Tahoma, Geneva, sans-serif;
     display: flex;
     justify-content: center;
@@ -19,8 +19,7 @@
     opacity: 0;
     max-width: 100vw;
     max-height: 100vh;
-    transition: opacity 3s ease;
-    image-rendering: pixelated; /* crisp, pixelated look */
+    image-rendering: pixelated;
   }
 </style>
 </head>
@@ -28,28 +27,30 @@
   <img src="logo.png" alt="Logo" id="logo" />
 <script>
   const img = document.getElementById('logo');
-  let scale = 3;   // start bigger than screen
-  let opacity = 0; // start fully transparent
+  let scale = 3;
+  let opacity = 0;
 
-  // Initial transform and opacity
-  img.style.transform = `scale(${scale})`;
-  img.style.opacity = opacity;
+  // How many frames approx for 30 seconds at 60fps
+  const totalFrames = 30 * 60;
+  let frame = 0;
 
   function animate() {
-    if (scale > 1 || opacity < 1) {
-      if (scale > 1) {
-        scale -= 0.02; // shrink scale gradually
-        if (scale < 1) scale = 1;
-      }
-      if (opacity < 1) {
-        opacity += 0.01; // fade in gradually
-        if (opacity > 1) opacity = 1;
-      }
-      img.style.transform = `scale(${scale.toFixed(2)})`;
-      img.style.opacity = opacity.toFixed(2);
+    if (frame <= totalFrames) {
+      // Calculate progress from 0 to 1
+      const progress = frame / totalFrames;
+
+      // Scale from 3 to 1 linearly
+      scale = 3 - 2 * progress;
+
+      // Opacity from 0 to 1 linearly
+      opacity = progress;
+
+      img.style.transform = `scale(${scale.toFixed(3)})`;
+      img.style.opacity = opacity.toFixed(3);
+
+      frame++;
       requestAnimationFrame(animate);
     } else {
-      // Wait a moment, then redirect
       setTimeout(() => {
         window.location.href = 'true.html';
       }, 800);
