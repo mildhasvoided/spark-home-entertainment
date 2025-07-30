@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Windows 95 Style Fade & Redirect</title>
+<style>
+  /* Windows 95 vibe */
+  body {
+    margin: 0;
+    background: #008080; /* classic teal */
+    font-family: 'MS Sans Serif', Tahoma, Geneva, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  img {
+    position: relative;
+    opacity: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    transition: opacity 3s ease;
+  }
+</style>
+</head>
+<body>
+  <img src="logo.png" alt="Logo" id="logo" />
+<script>
+  const img = document.getElementById('logo');
+  let scale = 3; // start bigger than screen
+  let opacity = 0;
+
+  // Set initial style
+  img.style.transform = `scale(${scale})`;
+  img.style.opacity = opacity;
+
+  function animate() {
+    if (scale > 1) {
+      scale -= 0.02;       // shrink scale gradually
+      opacity += 0.015;    // increase opacity gradually
+      if (opacity > 1) opacity = 1;
+      img.style.transform = `scale(${scale.toFixed(2)})`;
+      img.style.opacity = opacity.toFixed(2);
+      requestAnimationFrame(animate);
+    } else {
+      // When done, redirect after a short delay
+      setTimeout(() => {
+        window.location.href = 'true.html';
+      }, 800);
+    }
+  }
+
+  // Start animation once image is loaded
+  img.onload = () => {
+    animate();
+  };
+</script>
+</body>
+</html>
