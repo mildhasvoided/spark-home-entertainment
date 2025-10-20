@@ -1,8 +1,16 @@
 html {
     scroll-behavior: smooth;
 }
+
 body{
     background-color:black;
     color:white;
     text-align:center;
+}
+
+pre {
+    font-family: monospace;
+    white-space: pre;
+    text-align: left;
+    display: inline-block;
 }
