@@ -1,6 +1,60 @@
 // Smooth scrolling for anchor links and page transitions
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Auto-scroll to top on page load to prevent initial downward scrolling
+    window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+    });
+    
+    // Prevent any automatic scrolling for the first 30ms and actively scroll up
+    let allowScrolling = false;
+    const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+    
+    // Disable smooth scrolling temporarily
+    document.documentElement.style.scrollBehavior = 'auto';
+    
+    // Actively auto-scroll up during the 30ms period
+    const autoScrollInterval = setInterval(() => {
+        if (!allowScrolling) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'instant'
+            });
+        }
+    }, 5); // Check and scroll to top every 5ms
+    
+    // Re-enable scrolling after 30ms and stop auto-scrolling
+    setTimeout(() => {
+        allowScrolling = true;
+        clearInterval(autoScrollInterval);
+        document.documentElement.style.scrollBehavior = originalScrollBehavior;
+    }, 30);
+    
+    // Override scroll events during the initial 30ms
+    function preventEarlyScroll(e) {
+        if (!allowScrolling) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.scrollTo({
+                top: 0,
+                behavior: 'instant'
+            });
+        }
+    }
+    
+    // Add scroll prevention listeners
+    window.addEventListener('scroll', preventEarlyScroll, { passive: false });
+    window.addEventListener('wheel', preventEarlyScroll, { passive: false });
+    window.addEventListener('touchmove', preventEarlyScroll, { passive: false });
+    
+    // Remove listeners after 30ms
+    setTimeout(() => {
+        window.removeEventListener('scroll', preventEarlyScroll);
+        window.removeEventListener('wheel', preventEarlyScroll);
+        window.removeEventListener('touchmove', preventEarlyScroll);
+    }, 30);
+    
     // Handle smooth scrolling for anchor links
     const anchorLinks = document.querySelectorAll('a[href*="#"]');
     
@@ -88,6 +142,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         }, 500); // Wait for page load animation to complete
+    } else {
+        // Stay at the top - no auto-scroll to header
+        // The 30ms protection will keep it at the very top
     }
 });
 
