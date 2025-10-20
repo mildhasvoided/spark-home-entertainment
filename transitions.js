@@ -146,6 +146,64 @@ document.addEventListener('DOMContentLoaded', function() {
         // Stay at the top - no auto-scroll to header
         // The 30ms protection will keep it at the very top
     }
+    
+    // Preload all pages for faster navigation
+    const pagesToPreload = [
+        'index.html',
+        'projects.html',
+        'roadmap.html',
+        'status.html'
+    ];
+    
+    // Function to preload a page
+    function preloadPage(url) {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = url;
+        document.head.appendChild(link);
+        
+        // Also create a hidden iframe for more aggressive preloading
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.display = 'none';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.onload = () => {
+            // Remove iframe after loading to save memory
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
+            }, 1000);
+        };
+        document.body.appendChild(iframe);
+    }
+    
+    // Preload pages after initial page load (delay to not interfere with current page)
+    setTimeout(() => {
+        pagesToPreload.forEach(page => {
+            // Don't preload the current page
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            if (page !== currentPage) {
+                preloadPage(page);
+            }
+        });
+    }, 2000); // Wait 2 seconds after page load to start preloading
+    
+    // Add hover preloading for immediate links
+    document.addEventListener('mouseover', function(e) {
+        const link = e.target.closest('a[href$=".html"], a[href*=".html#"]');
+        if (link && !link.dataset.preloaded) {
+            const href = link.getAttribute('href').split('#')[0]; // Remove hash fragment
+            link.dataset.preloaded = 'true';
+            
+            // Create prefetch link
+            const prefetchLink = document.createElement('link');
+            prefetchLink.rel = 'prefetch';
+            prefetchLink.href = href;
+            document.head.appendChild(prefetchLink);
+        }
+    });
 });
 
 // Enhanced button press feedback
