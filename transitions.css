@@ -1,8 +1,33 @@
 /* Page Transition Effects - PowerPoint Morph Style */
 
-/* Initial page load animation */
+/* Loading pause - hide elements for GitHub Pages loading */
+body.loading-pause {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    animation: none !important;
+}
+
+/* Initial page load animation with blur entry */
 body {
-    animation: fadeIn 0.8s ease-in-out;
+    animation: fadeInFromBlur 1s ease-in-out;
+}
+
+@keyframes fadeInFromBlur {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+        filter: blur(50px);
+        visibility: hidden;
+    }
+    1% {
+        visibility: visible;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0px);
+        visibility: visible;
+    }
 }
 
 @keyframes fadeIn {
@@ -165,17 +190,33 @@ button {
     overflow: hidden;
 }
 
+/* Page exit overlay - simplified for better blur effect */
+.page-exit-overlay {
+    display: none;
+}
+
 .page-exit {
-    animation: fadeOut 0.5s ease-in-out forwards;
+    animation: fadeOut 1s ease-in-out forwards;
+}
+
+@keyframes fadeToBlur {
+    0% {
+        backdrop-filter: blur(0px);
+    }
+    100% {
+        backdrop-filter: blur(50px);
+    }
 }
 
 @keyframes fadeOut {
     0% {
         opacity: 1;
         transform: scale(1) translateY(0);
+        filter: blur(0px);
     }
     100% {
         opacity: 0;
         transform: scale(0.95) translateY(-20px);
+        filter: blur(50px);
     }
 }

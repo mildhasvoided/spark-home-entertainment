@@ -4,8 +4,9 @@ html {
 
 body{
     background-color:black;
-    color:white;
+    color:rgb(0, 255, 21);
     text-align:center;
+
 }
 
 pre {
@@ -13,4 +14,24 @@ pre {
     white-space: pre;
     text-align: left;
     display: inline-block;
+    animation: red3 1s linear infinite;
+}
+button {
+    background-color:rgb(0, 0, 0);
+    color:rgb(0, 255, 21);
+    border-color:rgb(0, 255, 21);
+}
+@keyframes red3{
+    0% {color:rgb(0, 255, 21);}
+    10% {color:rgb(0, 255, 21);}
+    20% {color:rgb(0, 255, 21);}
+    50% {color:rgb(0, 255, 21);}
+    60%{color:rgb(0, 255, 21);}
+    70% {color:rgb(0, 255, 21);}
+    80% {color:rgb(0, 255, 21);}
+    90% {color:rgb(0, 255, 21);}
+    100%{color:rgb(0, 255, 21);}
+}
+h1{
+    animation: red3 20s linear infinite;
 }

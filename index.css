@@ -35,3 +35,38 @@ a {
 #jv{
     margin-top:100px;
 }
+#blsky {
+    vertical-align: middle;
+}
+#discord{
+    vertical-align: middle;
+    
+}
+#yt{
+    vertical-align: middle;
+}
+#ds{
+    animation: ds 2s linear infinite;
+}
+@keyframes blsky{
+    0% {color:rgb(0, 247, 255);}
+    50%{color:rgb(255, 255, 255);}
+    100%{color:rgb(0, 247, 255);}
+}
+@keyframes ds{
+    0% {color:blue;}
+    50%{color:white;}
+    100%{color:blue;}
+}
+
+#bl{
+        animation: blsky 2s linear infinite;
+}
+@keyframes youtube{
+    0% {color:rgb(255, 0, 0);}
+    50%{color:white;}
+    100%{color:rgb(255, 0, 0);}
+}
+#ytb{
+        animation: youtube 2s linear infinite;
+}

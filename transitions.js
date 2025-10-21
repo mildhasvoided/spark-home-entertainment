@@ -1,6 +1,14 @@
 // Smooth scrolling for anchor links and page transitions
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Add loading pause class initially for GitHub Pages loading time
+    document.body.classList.add('loading-pause');
+    
+    // Remove loading pause after 1 second to allow GitHub Pages to load
+    setTimeout(() => {
+        document.body.classList.remove('loading-pause');
+    }, 1000);
+    
     // Auto-scroll to top on page load to prevent initial downward scrolling
     window.scrollTo({
         top: 0,
@@ -121,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 button.style.transform = 'scale(0.95)';
             }
             
-            // Delay navigation to show exit animation
+            // Delay navigation to show exit animation and allow loading time
             setTimeout(() => {
                 window.location.href = href;
-            }, 300);
+            }, 1800);
             
             e.preventDefault();
         });
@@ -204,6 +212,56 @@ document.addEventListener('DOMContentLoaded', function() {
             document.head.appendChild(prefetchLink);
         }
     });
+
+    // Scroll-speed based motion blur - affects all elements
+    let lastScrollTop = 0;
+    let scrollVelocity = 0;
+    let scrollTimeout;
+    let isSmootScrolling = false;
+
+    // Apply scroll blur to all elements
+    const allElements = document.querySelectorAll('*');
+
+    function updateScrollBlur() {
+        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        scrollVelocity = Math.abs(currentScrollTop - lastScrollTop);
+        lastScrollTop = currentScrollTop;
+
+        // Remove existing scroll blur classes from all elements
+        allElements.forEach(el => {
+            el.classList.remove('scrolling-slow', 'scrolling-medium', 'scrolling-fast', 'scrolling-very-fast');
+        });
+
+        // Apply small blur to all elements based on scroll velocity
+        let blurClass = '';
+        if (scrollVelocity > 0 && scrollVelocity <= 5) {
+            blurClass = 'scrolling-slow';
+        } else if (scrollVelocity > 5 && scrollVelocity <= 15) {
+            blurClass = 'scrolling-medium';
+        } else if (scrollVelocity > 15 && scrollVelocity <= 30) {
+            blurClass = 'scrolling-fast';
+        } else if (scrollVelocity > 30) {
+            blurClass = 'scrolling-very-fast';
+        }
+
+        if (blurClass) {
+            allElements.forEach(el => {
+                el.classList.add(blurClass);
+            });
+        }
+
+        // Clear blur after scrolling stops
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            allElements.forEach(el => {
+                el.classList.remove('scrolling-slow', 'scrolling-medium', 'scrolling-fast', 'scrolling-very-fast');
+            });
+            scrollVelocity = 0;
+        }, 100);
+    }
+
+    // Listen for scroll events
+    window.addEventListener('scroll', updateScrollBlur, { passive: true });
 });
 
 // Enhanced button press feedback
