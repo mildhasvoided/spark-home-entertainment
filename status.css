@@ -1,9 +1,0 @@
-html {
-    scroll-behavior: smooth;
-}
-body{
-    background-color:black;
-    color:white;
-    min-height:100vh;
-    text-align:center;
-}
